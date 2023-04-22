@@ -4,7 +4,7 @@ import Base.baseSetUp;
 import Common.PropertiesFile;
 import Common.RecordVideo;
 import Common.ValidateHelper;
-import Pages.longInPage;
+import Pages.logInPage;
 import Pages.mainPage;
 import Pages.requestPage;
 import atu.testrecorder.exceptions.ATUTestRecorderException;
@@ -21,7 +21,7 @@ public class requestTest extends baseSetUp {
     private WebDriver driver;
     private ValidateHelper validateHelper;
     public WebDriverWait wait;
-    public longInPage longInPage;
+    public logInPage logInPage;
     public mainPage mainPage;
     public requestPage requestpage;
     public static RecordVideo RecordVideo;
@@ -37,21 +37,20 @@ public class requestTest extends baseSetUp {
 
     @Test(priority = 1)
     public void longInTest() throws InterruptedException {
+        PropertiesFile.setPropertiesFile();
         Thread.sleep(30);
-        driver.get("http://account.base.vn/a/login?app=account&return=company");
-        longInPage longInPage = new longInPage(driver);
-        mainPage mainpage = longInPage.longIn("giangbaseinc@gmail.com", "giang123");
+        driver.navigate().to("https://account.base.vn/a/login?app=account&return=company");
+        logInPage = new logInPage(driver);
+        mainPage mainpage = logInPage.logIn(PropertiesFile.getPropValue("email"),PropertiesFile.getPropValue("password"));
     }
 
     @Test(priority = 2)
     public void BaseRequest() throws InterruptedException {
-        Thread.sleep(30);
         mainPage = new mainPage(driver);
         requestPage requestpage = mainPage.baseRequest();
-        Thread.sleep(20);
     }
 
-    @Test(priority = 3)
+   @Test(priority = 3)
     public void setRequest() throws InterruptedException, AWTException {
         PropertiesFile.setPropertiesFile();
         requestpage = new requestPage(driver);
@@ -67,7 +66,7 @@ public class requestTest extends baseSetUp {
                 requestpage.setRequest(PropertiesFile.getPropValue("nameRequest"), PropertiesFile.getPropValue("detailRequest"), PropertiesFile.getPropValue("manager"));
                 requestpage.sendRequest();
                 Thread.sleep(3000);
-                requestpage.checkBox();
+                requestpage.checkBox(PropertiesFile.getPropValue("newNameRequest"),PropertiesFile.getPropValue("newDetailRequest"));
                 Thread.sleep(3000);
                 requestpage.checkGroups();
                 Thread.sleep(3000);
@@ -82,6 +81,23 @@ public class requestTest extends baseSetUp {
         //Switch to Parent window (Main Windown)
           driver.switchTo().window(MainWindown);
           Thread.sleep(2000);
+    }
+    @Test(priority = 4)
+    public void requestCustomField() throws InterruptedException, AWTException {
+        PropertiesFile.setPropertiesFile();
+        requestpage.clickToCustomRequest();
+        String MainWindown = driver.getWindowHandle();
+        System.out.println(MainWindown);
+        Set<String> windowns = driver.getWindowHandles();
+        for (String windown : windowns) {
+            if (!MainWindown.equals(windown)) {
+                driver.switchTo().window(windown);
+                Thread.sleep(2000);
+                requestpage.setNewRequest();
+                requestpage.searchCustomField(PropertiesFile.getPropValue("searchCustomField"));
+                requestpage.setCustomField(PropertiesFile.getPropValue("nameCustomField"), PropertiesFile.getPropValue("customSoNguyen"), PropertiesFile.getPropValue("customTruongText"), PropertiesFile.getPropValue("longText"), PropertiesFile.getPropValue("customTime"), PropertiesFile.getPropValue("customSoThapPhan"), PropertiesFile.getPropValue("Material"), PropertiesFile.getPropValue("quantity"), PropertiesFile.getPropValue("price"), PropertiesFile.getPropValue("notion"), PropertiesFile.getPropValue("followers"));
+            }
+        }
     }
     @AfterClass
     public void tearDown() throws ATUTestRecorderException {

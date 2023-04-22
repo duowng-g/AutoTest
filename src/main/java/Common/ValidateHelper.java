@@ -47,5 +47,10 @@ public class ValidateHelper {
             System.out.println("Khong load duoc trang");
         }
     }
+
+    //Handle checkbox
+    public void clearText(By element){
+        driver.findElement(element).clear();
+    }
 }
 

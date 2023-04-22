@@ -1,8 +1,9 @@
 package Testcase;
 
 import Base.baseSetUp;
+import Common.PropertiesFile;
 import Common.ValidateHelper;
-import Pages.longInPage;
+import Pages.logInPage;
 import Pages.mainPage;
 import Pages.requestPage;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +13,7 @@ import org.testng.annotations.Test;
 
 public class mainTest extends baseSetUp {
     private WebDriver driver;
-    public longInPage longInPage;
+    public logInPage logInPage;
     public mainPage mainPage;
     public ValidateHelper validateHelper;
     public WebDriverWait wait;
@@ -24,10 +25,11 @@ public class mainTest extends baseSetUp {
     }
     @Test(priority = 1)
     public void longInTest() throws InterruptedException {
+        PropertiesFile.setPropertiesFile();
         Thread.sleep(30);
         driver.navigate().to("https://account.base.vn/a/login?app=account&return=company");
-        longInPage = new longInPage(driver);
-        mainPage mainpage = longInPage.longIn("giangbaseinc@gmail.com","giang123");
+        logInPage = new logInPage(driver);
+        mainPage mainpage = logInPage.logIn(PropertiesFile.getPropValue("email"),PropertiesFile.getPropValue("password"));
     }
     @Test(priority = 2)
     public void BaseRequest() throws InterruptedException {

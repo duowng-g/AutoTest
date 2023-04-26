@@ -8,6 +8,7 @@ import Pages.logInPage;
 import Pages.mainPage;
 import Pages.requestPage;
 import atu.testrecorder.exceptions.ATUTestRecorderException;
+import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
@@ -86,17 +87,39 @@ public class requestTest extends baseSetUp {
     public void requestCustomField() throws InterruptedException, AWTException {
         PropertiesFile.setPropertiesFile();
         requestpage.clickToCustomRequest();
-        String MainWindown = driver.getWindowHandle();
-        System.out.println(MainWindown);
-        Set<String> windowns = driver.getWindowHandles();
-        for (String windown : windowns) {
-            if (!MainWindown.equals(windown)) {
-                driver.switchTo().window(windown);
+        String MainWindow = driver.getWindowHandle();
+        System.out.println(MainWindow);
+        Set<String> windows = driver.getWindowHandles();
+        for (String window : windows) {
+            if (!MainWindow.equals(window)) {
+                driver.switchTo().window(window);
                 Thread.sleep(2000);
                 requestpage.setNewRequest();
                 requestpage.searchCustomField(PropertiesFile.getPropValue("searchCustomField"));
                 requestpage.setCustomField(PropertiesFile.getPropValue("nameCustomField"), PropertiesFile.getPropValue("customSoNguyen"), PropertiesFile.getPropValue("customTruongText"), PropertiesFile.getPropValue("longText"), PropertiesFile.getPropValue("customTime"), PropertiesFile.getPropValue("customSoThapPhan"), PropertiesFile.getPropValue("Material"), PropertiesFile.getPropValue("quantity"), PropertiesFile.getPropValue("price"), PropertiesFile.getPropValue("notion"), PropertiesFile.getPropValue("followers"));
+                driver.close();
             }
+        }
+        //switch to parent window
+        driver.switchTo().window(MainWindow);
+        Thread.sleep(2000);
+    }
+    @Test(priority = 5)
+    public void responseRequest() throws InterruptedException {
+        PropertiesFile.setPropertiesFile();
+        requestpage.clickToCustomRequest();
+        String mainWindow = driver.getWindowHandle();
+        Set<String> windows = driver.getWindowHandles();
+        for(String window : windows){
+            if(!mainWindow.equals(window)){
+                driver.switchTo().window(window);
+                requestpage.searchRequest(PropertiesFile.getPropValue("requestName"),PropertiesFile.getPropValue("requestGroups"));
+                requestpage.answerRequest(PropertiesFile.getPropValue("result"),PropertiesFile.getPropValue("detailsuccess"),PropertiesFile.getPropValue("Forwarder1"),PropertiesFile.getPropValue("Forwarder2"),PropertiesFile.getPropValue("detailrefuse"));
+                //Close the child window
+                driver.close();
+            }
+            //Switch to mainWindow
+            driver.switchTo().window(mainWindow);
         }
     }
     @AfterClass

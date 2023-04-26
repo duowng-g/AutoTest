@@ -2,6 +2,7 @@ package Pages;
 
 import Common.PropertiesFile;
 import Common.ValidateHelper;
+import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -85,11 +86,11 @@ public class requestPage {
     By creatCustomFile = By.xpath("//div[@class='button ok -success -rounded bold url']");
     //By newCustomReuqest = By.xpath("(//a[@title='Request and Approve'])[1]");
 
-    public void setNewRequest(){
+    public void setNewRequest() throws InterruptedException {
         validateHelper.clickElement(zoomOutMess);
         validateHelper.clickElement(newRequest);
     }
-    public void searchRequest(){
+    public void searchRequest() throws InterruptedException {
         validateHelper.clickElement(resultSearch);
     }
     public void setRequest(String nameRequest, String detailRequest, String manager) throws AWTException, InterruptedException {
@@ -164,7 +165,7 @@ public class requestPage {
         validateHelper.sendText(searchAdvanced, search);
         validateHelper.clickElement(searchAdvancedEnter);
     }
-    public void searchCustomField(String searchCustomField){
+    public void searchCustomField(String searchCustomField) throws InterruptedException {
         validateHelper.sendText(searchCustomField_btn,searchCustomField);
         validateHelper.clickElement(searchCustomResult);
     }
@@ -221,6 +222,75 @@ public class requestPage {
     }
     public void clickToCustomRequest(){
         driver.findElement(By.xpath("(//div[@class='g-body'])[2]//child::a[2]")).click();
+    }
+    //response Reuqest
+    By receiving_btn = By.xpath("//div[@data-filter='receiving']//div[@class='cb']");
+    By sending_btn = By.xpath("//div[@data-filter='sending']//div[@class='cb']");
+    By followings_btn = By.xpath("//div[@data-filter='following']//div[@class='cb']");
+    By zoomOut = By.xpath("//div[@class='icon js-channel-minus']");
+    By filters_btn = By.xpath("//div[@id='js-filter-button']");
+    By requestName_btn = By.xpath("(//div[@class='input'])[2]//input");
+    By groups_btn = By.xpath("//div[@class='is-display url']");
+    By quickFilters_btn = By.xpath("//input[@placeholder='Lọc nhanh']");
+    By resultGroups = By.xpath("//div[@class='is-item'][normalize-space()='Request có custom field']");
+    By currentStatus = By.xpath("//select[@name='s']");
+    By madeBy = By.xpath("(//div[@class='input'])[4]//input[@name='users']");
+    By finishFrom_btn = By.xpath("(//div[@class='input'])[5]//input[@name='finish_from']");
+    By resultFinishFrom = By.xpath("(//a[normalize-space()='27'])[1]");
+    By updateFilters = By.xpath("(//div[@class='update js-submit url'])[1]");
+    By resultSearch_response = By.xpath("(//span[@class='text-link rq-unchecked'])[1]");
+    By success_btn = By.xpath("(//div[@class='button -success -rounded'])[1]");
+    By detailSuccess = By.xpath("(//div[@class='input data'])[1]//textarea[@name='msg']");
+    By acceptRequest = By.xpath("(//div[@class='button ok -success -rounded bold url'])[1]");
+    By cta_btn = By.xpath("(//div[@class='button -cta -rounded'])[1]");
+    By searchForwarder = By.xpath("//div[contains(@class,'box-search')]//input[@name='qsearch']");
+    By resultForwarder = By.xpath("(//div[@class='body'])[2]//div[@class='select-users list-users  ']");
+    By successForwarded = By.xpath("//div[@class='button ok -success -rounded bold']");
+    By error_btn = By.xpath("(//div[@class='button -error -rounded'])[1]");
+    By detailRefuse = By.xpath("(//div[@class='input data'])[1]//textarea[@name='msg']");
+    By refuseForwarded = By.xpath("//div[@class='button ok -error -rounded bold url']");
+
+
+
+    public void searchRequest(String requestName, String requestGroups) throws InterruptedException {
+        validateHelper.clickElement(zoomOut);
+        validateHelper.clickElement(receiving_btn);
+        Thread.sleep(2000);
+        validateHelper.clickElement(sending_btn);
+        Thread.sleep(2000);
+        validateHelper.clickElement(followings_btn);
+        Thread.sleep(2000);
+        validateHelper.clickElement(filters_btn);
+        validateHelper.sendText(requestName_btn,requestName);
+        validateHelper.clickElement(groups_btn);
+        validateHelper.sendText(quickFilters_btn,requestGroups);
+        validateHelper.clickElement(resultGroups);
+        Select select = new Select(driver.findElement(currentStatus));
+        select.selectByVisibleText("Đến lượt duyệt");
+        Thread.sleep(2000);
+        validateHelper.clickElement(resultSearch_response);
+    }
+    public void answerRequest(String result,String detailsuccess,String Forwarder1,String Forwarder2,String detailrefuse) throws InterruptedException {
+        switch (result.trim().toLowerCase()) {
+            case "accept":
+                validateHelper.clickElement(success_btn);
+                validateHelper.sendText(detailSuccess, detailsuccess);
+                validateHelper.clickElement(acceptRequest);
+                break;
+            case "forwarded":
+                validateHelper.clickElement(cta_btn);
+                validateHelper.sendText(searchForwarder,Forwarder1);
+                validateHelper.clickElement(resultForwarder);
+                validateHelper.clearText(searchForwarder);
+                validateHelper.sendText(searchForwarder,Forwarder2);
+                validateHelper.clickElement(resultForwarder);
+                validateHelper.clickElement(successForwarded);
+                break;
+            case "refuse":
+                validateHelper.clickElement(error_btn);
+                validateHelper.sendText(detailRefuse,detailrefuse);
+                validateHelper.clickElement(refuseForwarded);
+        }
     }
 
 

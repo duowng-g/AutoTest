@@ -28,5 +28,4 @@ public class logInPage {
         Thread.sleep(20);
         return new mainPage(driver);
     }
-
 }

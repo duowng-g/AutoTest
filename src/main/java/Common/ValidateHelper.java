@@ -29,7 +29,7 @@ public class ValidateHelper {
         wait.until(ExpectedConditions.visibilityOfElementLocated(element));
         driver.findElement(element).sendKeys(value);
     }
-    public void clickElement(By element){
+    public void clickElement(By element) throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(element));
         wait.until(ExpectedConditions.elementToBeClickable(element));
         driver.findElement(element).click();
